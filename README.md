@@ -276,7 +276,7 @@ to its WebSocket transport and login screen.
 | `home/native-apps.lock.json` | OctoSense-System-Apps revision (`.sources/system-apps`) |
 | `home/system-apps.json` | Which system apps ship, and the assets Home mounts for them |
 | `home/native-runtime.lock.json` | OctoScript-Makepad revision; its `runtime.json` names Makepad and OctoScript |
-| `home/runtime-patches.lock.json` | The reviewed Makepad patch: base revision, source commit, SHA-256, resulting tree |
+| `home/runtime-patches.lock.json` | The reviewed Makepad patches: base revision, source commits, SHA-256s, resulting tree |
 | `home/Cargo.toml`, `home/Cargo.lock` | Makepad `rev` (must equal the runtime's), App Hub `rev`, the octos `rev` used for `nix` |
 | `home/upstream/makepad.json` | Provenance of the window-manager sources imported from Makepad |
 
@@ -302,6 +302,12 @@ name) at `.sources/makepad`, and every App Hub crate at Home's App Hub pin;
   staged; `--check` accepts only the exact recorded tree. When makepad#30
   merges and the runtime moves past it, remove the `makepad` entry from
   `home/runtime-patches.lock.json` and the patch file.
+  `patches/runtime/makepad-qr-scanner.patch` is stacked on it (`stacked` in
+  the same entry, applied in order; `tree` is the result of both): the
+  platform and packager part of
+  [makepad#31](https://github.com/OctoSense-org/makepad/pull/31), the camera
+  QR scanner API AI providers uses. Drop it the same way once #31 is in the
+  runtime.
 - **App Hub.** Change the `rev` of `octosense-app-hub-app` (both
   dependency lines) and of the four App Hub crates in the
   `[patch."https://github.com/OctoSense-org/OctoSense-App-Hub"]` section

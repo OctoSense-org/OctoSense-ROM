@@ -62,6 +62,7 @@ fn icon_for(id: &str) -> Option<Ico> {
         "vj" => Ico::Headphone,
         "photos" => Ico::Photo,
         "clock" => Ico::Calendar,
+        "calendar" => Ico::Calendar,
         "weather" => Ico::Brightness,
         "fabric" => Ico::Shirt,
         "fab" => Ico::Refresh,
@@ -130,6 +131,11 @@ pub fn apps_uncached() -> Vec<MenuItem> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn calendar_has_its_icon() {
+        assert_eq!(icon_for("calendar"), Some(Ico::Calendar));
+    }
 
     #[test]
     fn hides_match_exactly_and_case_sensitively() {

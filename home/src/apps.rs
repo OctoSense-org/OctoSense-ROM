@@ -51,6 +51,8 @@ fn linked_modules() -> Vec<&'static dyn AppModule> {
     out.push(&octosense_photos::PHOTOS_MODULE);
     #[cfg(any(feature = "app-appcard", native_mobile))]
     out.push(&octosense_appcard::APPCARD_MODULE);
+    #[cfg(any(feature = "app-calendar", native_mobile))]
+    out.push(&octosense_calendar::CALENDAR_MODULE);
     #[cfg(any(feature = "app-mail", native_mobile))]
     out.push(&octosense_mail::MAIL_MODULE);
     #[cfg(any(feature = "app-news", native_mobile))]
@@ -65,6 +67,20 @@ fn linked_modules() -> Vec<&'static dyn AppModule> {
         out.push(&octosense_app_hub_app::CARD_MODULE);
     }
     out
+}
+
+/// Calendar's open arguments from the launcher's app config, under the keys its
+/// README gives for Android (`calendar_server`, `calendar_token`,
+/// `calendar_device`, `calendar_locale`). Desktop sets the `CALENDAR_*`
+/// environment instead, which the module reads itself.
+pub fn calendar_open(config: Option<&makepad_strict_json::Value>) -> Option<String> {
+    let fields: Vec<String> = ["server", "token", "device", "locale"].iter()
+        .filter_map(|arg| {
+            let value = config?.get(&format!("calendar_{arg}"))?.as_str().filter(|v| !v.is_empty())?;
+            Some(format!("{arg:?}:{}", makepad_strict_json::Value::Str(value.to_owned()).to_json()))
+        })
+        .collect();
+    (!fields.is_empty()).then(|| format!("{{{}}}", fields.join(",")))
 }
 
 /// Manifest IDs live in a separate namespace from built-ins and user catalog
@@ -242,6 +258,16 @@ mod tests {
         assert!(!matches_running_app(&app,"hub:news-other","News"));
     }
 
+    #[test]
+    fn calendar_opens_with_the_app_config_keys_its_readme_names() {
+        let config = makepad_strict_json::parse(br#"{"calendar_server":"http://10.0.2.2:8190","calendar_token":"t0k\"n","calendar_locale":"zh","mail_endpoint":"x"}"#).unwrap();
+        assert_eq!(calendar_open(Some(&config)).as_deref(),
+                   Some(r#"{"server":"http://10.0.2.2:8190","token":"t0k\"n","locale":"zh"}"#));
+        let empty = makepad_strict_json::parse(br#"{"calendar_device":""}"#).unwrap();
+        assert_eq!(calendar_open(Some(&empty)), None);
+        assert_eq!(calendar_open(None), None);
+    }
+
 
     #[cfg(feature = "mobile-apps")]
     #[test]
@@ -249,7 +275,7 @@ mod tests {
         use makepad_widgets::*;
         let catalog = bundled_catalog();
         assert_eq!(catalog.iter().map(|app| app.id.as_str()).collect::<Vec<_>>(),
-                   ["reference", "sheets", "photos", "appcard", "mail", "news", "maps", "camera", "apphub"]);
+                   ["reference", "sheets", "photos", "appcard", "calendar", "mail", "news", "maps", "camera", "apphub"]);
         assert!(catalog.iter().all(|app| app.manifest.is_none()));
         assert_eq!(catalog[0].policy, crate::clients::LaunchPolicy::AlwaysNew);
         let registry = AppRegistry::default();

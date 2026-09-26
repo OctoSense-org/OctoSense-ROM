@@ -673,12 +673,19 @@ Found in the review of the second sync from mobile on 2026-09-25
     `android` is always false (Android uses floating navigation), so its
     band and pill conditions are dead.
 
-- [ ] **CAL-01 — P2: Host the Calendar module from mobile PR #11.**
+- [x] **CAL-01 — P2: Host the Calendar module from mobile PR #11.**
 
   Everything else in PR #11 (`feat/calendar-module`) is present; Calendar
   module hosting is not. Its source is in the pinned AppCard at
   `.sources/appcards/apps/calendar/native`. Planned separately (Task 14 of
   `docs/plans/2026-09-25-sync-mobile-into-home.md`).
+
+  Done on 2026-09-26: `octosense-calendar` is linked behind `app-calendar`
+  (part of `mobile-apps`, always on native mobile), after AppCard. Its Noto
+  Sans SC faces are packaged, it has the launcher's calendar icon, and on
+  Android it opens with the `calendar_server`, `calendar_token`,
+  `calendar_device` and `calendar_locale` keys of `MAKEPAD_APP_CONFIG` that its
+  README names (`apps::calendar_open`). CI runs its tests.
 
 - [ ] **RUNTIME-01 — P2: `init_cx_os()` traps off the main thread on macOS 14.**
 

@@ -151,8 +151,20 @@ macro_rules! octosense_main_with_camera {
 macro_rules! octosense_main_with_camera {
     ($($extra:literal),* $(,)?) => { octosense_main_with_robrix!($($extra),*); };
 }
+#[cfg(any(feature = "app-calendar", native_mobile))]
+macro_rules! octosense_main_with_calendar {
+    ($($extra:literal),* $(,)?) => { octosense_main_with_camera!(
+        "octosense_calendar/resources/service/NotoSansSC-Regular.ttf",
+        "octosense_calendar/resources/service/NotoSansSC-Bold.ttf",
+        $($extra),*
+    ); };
+}
+#[cfg(not(any(feature = "app-calendar", native_mobile)))]
+macro_rules! octosense_main_with_calendar {
+    ($($extra:literal),* $(,)?) => { octosense_main_with_camera!($($extra),*); };
+}
 #[cfg(any(feature = "app-mail", native_mobile))]
-octosense_main_with_camera!(
+octosense_main_with_calendar!(
     "octosense_mail/resources/ux/Inter-200.ttf",
     "octosense_mail/resources/ux/Inter-300.ttf",
     "octosense_mail/resources/ux/Inter-400.ttf",
@@ -161,7 +173,7 @@ octosense_main_with_camera!(
     "octosense_mail/resources/ux/Inter-700.ttf",
 );
 #[cfg(not(any(feature = "app-mail", native_mobile)))]
-octosense_main_with_camera!();
+octosense_main_with_calendar!();
 
 script_mod! {
     use mod.prelude.widgets.*
@@ -2108,6 +2120,9 @@ impl App {
                 .and_then(|text| makepad_strict_json::parse(text.as_bytes()).ok())
                 .and_then(|config| config.get("mail_endpoint").and_then(|v| v.as_str()).map(str::to_owned))
                 .map(|endpoint| schema.validate(&format!("{{\"endpoint\":{}}}", makepad_strict_json::Value::Str(endpoint).to_json()), &[]))
+        } else if module.id() == "calendar" {
+            let config = std::env::var("MAKEPAD_APP_CONFIG").ok().and_then(|text| makepad_strict_json::parse(text.as_bytes()).ok());
+            apps::calendar_open(config.as_ref()).map(|json| schema.validate(&json, &[]))
         } else { None };
         let configured_open = std::env::var("MAKEPAD_APP_CONFIG").ok()
             .and_then(|text| makepad_strict_json::parse(text.as_bytes()).ok())

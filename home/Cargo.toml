@@ -62,6 +62,8 @@ makepad-sheets = { git = "https://github.com/OctoSense-org/makepad.git", rev = "
 octosense-photos = { path = "apps/photos", optional = true }
 octosense-reference = { path = "apps/reference", optional = true }
 octosense-mail = { path = "../.sources/appcards/apps/mail/native", optional = true }
+# The Calendar app (Octoscript-AppCard apps/calendar) as an in-process module.
+octosense-calendar = { path = "../.sources/appcards/apps/calendar/native", optional = true }
 # The whole Octoscript-AppCard app hosted in a tile, in-process (Phase B of
 # the AppCard port): octos-app's AppShell — routing brain, cards, kernel agent.
 octosense-appcard = { path = "apps/appcard", optional = true }
@@ -85,6 +87,7 @@ makepad-aichat = { git = "https://github.com/OctoSense-org/makepad.git", rev = "
 [target.'cfg(any(target_os = "android", target_os = "ios", target_env = "ohos"))'.dependencies]
 octosense-reference = { path = "apps/reference" }
 octosense-mail = { path = "../.sources/appcards/apps/mail/native" }
+octosense-calendar = { path = "../.sources/appcards/apps/calendar/native" }
 octosense-appcard = { path = "apps/appcard" }
 octosense-news = { path = "apps/news" }
 octosense-app-hub-app = { path = "apps/app-hub" }
@@ -102,7 +105,7 @@ default = ["app-hub"]
 # `target_os = "android"`); a desktop build is universal unless this is on.
 mobile-only = []
 # Also usable on desktop for testing the same embedded apps with --module.
-mobile-apps = ["app-reference", "app-sheets", "app-photos", "app-appcard", "app-mail", "app-news", "app-maps", "app-camera", "app-hub"]
+mobile-apps = ["app-reference", "app-sheets", "app-photos", "app-appcard", "app-calendar", "app-mail", "app-news", "app-maps", "app-camera", "app-hub"]
 app-hub = ["dep:octosense-app-hub-app"]
 app-mail = ["dep:octosense-mail"]
 app-reference = ["dep:octosense-reference"]
@@ -112,6 +115,8 @@ app-sheets = ["dep:makepad-sheets"]
 app-photos = ["dep:octosense-photos"]
 # The AppCard module (one L0 weather card in a tile) linked in.
 app-appcard = ["dep:octosense-appcard"]
+# The Calendar module (native L0 scenes + the calendar sync service) linked in.
+app-calendar = ["dep:octosense-calendar"]
 # The News module (headlines in a tile) linked in.
 app-news = ["dep:octosense-news"]
 # The Camera module (the Mate 70 Air replica over Makepad video input) linked in.

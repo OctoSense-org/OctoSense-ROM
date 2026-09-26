@@ -16,7 +16,7 @@ development, and builds for OpenHarmony and the iOS simulator.
 | --- | --- | --- |
 | **OctoSense-ROM** (this one) | Phone shell, ROM image, installer | |
 | [OctoSense-Desktop](https://github.com/OctoSense-org/OctoSense-Desktop) | The desktop shell | Home was split from it on 15 September 2026; the two still share much of their source (see [home/README.md](home/README.md)). |
-| [OctoSense-System-Apps](https://github.com/OctoSense-org/OctoSense-System-Apps) | News, Photos, Maps, Camera and Mail as contained script apps, the Mail host service, and the AppCard assistant | Pinned in `home/native-apps.lock.json`, checked out to `.sources/system-apps`. |
+| [OctoSense-System-Apps](https://github.com/OctoSense-org/OctoSense-System-Apps) | News, Photos, Maps, Camera, Mail and AI providers as contained script apps, the Mail and `llm` host services, and the AppCard assistant | Pinned in `home/native-apps.lock.json`, checked out to `.sources/system-apps`. |
 | [OctoSense-App-Hub](https://github.com/OctoSense-org/OctoSense-App-Hub) | Signed catalog, admission gate, `hub` CLI, `card-host`, and the shared shell crate `octosense-app-hub-app` | Git dependency pinned in `home/Cargo.toml`. |
 | [OctoScript-App-Design-Flow](https://github.com/OctoSense-org/OctoScript-App-Design-Flow) | How to build and publish an OctoSense app | Not a build input. Start there to write an app for Home. |
 | [OctoScript-Makepad](https://github.com/OctoSense-org/OctoScript-Makepad) | Runtime release: names the Makepad and OctoScript revisions | Pinned in `home/native-runtime.lock.json`. |
@@ -215,7 +215,7 @@ one from a Mac.
 
 | Kind | Source | Runs as |
 | --- | --- | --- |
-| System apps: News, Photos, Maps, Camera, Mail | OctoSense-System-Apps `apps/<name>/bundle/`, selected by `home/system-apps.json` | Contained script apps, packed into the build |
+| System apps: News, Photos, Maps, Camera, Mail, AI providers | OctoSense-System-Apps `apps/<name>/bundle/`, selected by `home/system-apps.json` | Contained script apps, packed into the build |
 | Store apps | The App Hub catalog, installed at run time | Contained script or card apps |
 | AppCard assistant | OctoSense-System-Apps `apps/appcard/app/app` (`octos-app`) | Native module, linked in |
 | Native modules | `home/apps/*`, Sheets from Makepad | Linked modules, behind features |
@@ -243,7 +243,10 @@ host service: `host.request("family.method", ...)`, granted by its manifest.
 Mail is the first: the `mail` service (OctoSense-System-Apps
 `apps/mail/host-service`) holds accounts and passwords, keeps passwords in
 the keychain or behind an Android Keystore key, and gives the app folders,
-messages and a send, never a socket or a password. Secrets are the host's:
+messages and a send, never a socket or a password. The `llm` service
+(`apps/ai-providers/host-service`) keeps the AppCard assistant's LLM
+providers for AI providers: keys are typed, scanned or imported on its
+sheets, and Home restarts the AppCard core after a change. Secrets are the host's:
 no script app collects a password, PIN or one-time code. A person types
 one only on a host-owned sheet, the runtime makes password fields inert in
 a contained app, and the App Hub gate refuses bundles that declare them.
@@ -253,7 +256,7 @@ App Hub. On a desktop build, features opt in:
 
 | Feature | Links |
 | --- | --- |
-| `app-hub` (default) | App Hub, the Card runner, the system apps and the Mail service |
+| `app-hub` (default) | App Hub, the Card runner, the system apps and the Mail and `llm` services |
 | `app-reference`, `app-sheets`, `app-appcard` | Reference, Makepad Sheets, AppCard |
 | `app-news`, `app-photos`, `app-maps` | The native News, Photos and Maps, for comparison; each replaces its script app |
 | `app-aichat` | Makepad's aichat assistant as a module |

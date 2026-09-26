@@ -68,7 +68,7 @@ Search opens only by pulling down on Home; the App Library has no search bar. Se
 
 ## System apps
 
-News, Photos, Maps, Camera and Mail are contained script apps
+News, Photos, Maps, Camera, Mail and AI providers are contained script apps
 ([ADR 0004](docs/adr/0004-system-apps-are-contained-script-apps.md)). Their
 bundles live in OctoSense-System-Apps (`apps/<name>/bundle/`, pinned by
 `native-apps.lock.json`); `system-apps.json` names which this Home ships and
@@ -90,6 +90,24 @@ MAKEPAD_APP_CONFIG='{"mail_demo":true}' cargo run --release --features mobile-on
 adb shell am start -n <package>/.MakepadApp --es makepad.APP_CONFIG '{"mail_demo":true}'
 ```
 
+AI providers (`os.ai-providers`) edits the LLM providers the hosted AppCard
+assistant runs on, through the `llm` host service
+(`apps/ai-providers/host-service`), which Home registers at startup
+([src/llm_host.rs](src/llm_host.rs)):
+
+- the profile it writes is the AppCard kernel's, `<data dir>/octos-home/.octos/profiles/_main.json`
+  on a phone (`OCTOS_APP_CORE_DIR` overrides it); on Android the keys are in
+  that app-private profile, since octos reads them there;
+- on Android the import sheet can **scan** a provider QR with the camera
+  (Makepad's `cx.show_qr_scanner()`, carried as a runtime patch until
+  makepad#31 lands) or read one from a **chosen image**
+  (`QrImagePickActivity`: the system picker, the bytes handed over in a
+  private cache file on the `qr.image.result` packet); elsewhere it takes a
+  pasted code;
+- after any change Home restarts the AppCard core: the AppCard instances
+  end, their kernel with them, and the home tile opens a fresh one that
+  reads the new profile.
+
 `app-news`, `app-photos` and `app-maps` link the earlier native modules in
 place of their script apps, for comparison until the script apps are measured
 on a device; their notes are [docs/photos.md](docs/photos.md) and
@@ -106,7 +124,7 @@ by the default `app-hub` feature and on every mobile build. The **Preview
 catalog** switch shows the built-in apps while the live catalog is empty.
 
 See the crate's
-[README](https://github.com/OctoSense-org/OctoSense-App-Hub/blob/4605128d46fb982828d8198e0d71d62a39c7d6d6/crates/app-hub-app/README.md)
+[README](https://github.com/OctoSense-org/OctoSense-App-Hub/blob/f69aad56ebf91d365cf1967665268ec197a21066/crates/app-hub-app/README.md)
 at the pinned revision and the [native design evidence](docs/design/app-hub/README.md).
 App authors start with
 [OctoScript-App-Design-Flow](https://github.com/OctoSense-org/OctoScript-App-Design-Flow).

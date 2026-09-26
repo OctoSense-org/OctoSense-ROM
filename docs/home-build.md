@@ -27,7 +27,8 @@ The runtime's Makepad (main `1d3d383e`) has the isolate controls App Hub
 requires, but not yet the contained script apps of makepad#30, so
 `home/runtime-patches.lock.json` names one patch,
 `patches/runtime/makepad-contained-apps.patch`. The lock records the exact
-patch, its originating Makepad commit, SHA-256 and resulting Git tree; setup
+patch, its originating Makepad commit, SHA-256 and resulting Git tree. The same
+patch also carries Settings accessibility, IME and input-protection fixes; setup
 applies it to the pinned checkout and leaves it staged, and `--check` accepts
 only that exact tree. `--check` always rejects
 staged, unstaged or untracked source changes.
@@ -83,8 +84,8 @@ python3 scripts/stage-home.py
 scripts/stage-forks.sh /path/to/lineage-tree
 ```
 
-`stage-forks.sh` retains its existing reset of previously staged SystemUI and
-Quickstep files in the OS tree. Run it only on the designated build tree with no
+`stage-forks.sh` resets previously staged SystemUI and Quickstep files and the
+PermissionController integration paths in the OS tree. Run it only on the designated build tree with no
 active OS build or unrelated edits in those paths. It now takes Home's sources
 from this checkout, and no longer accepts a separate launcher checkout.
 The Linux OS build still uses `scripts/build-rom.sh` / `run-rom-rootfs.sh` and

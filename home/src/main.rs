@@ -1526,6 +1526,22 @@ impl App {
         self.redraw_all(cx);
     }
 
+    #[cfg(any(feature = "app-hub", native_mobile))]
+    fn close_revoked_release(&mut self, cx: &mut Cx, revoked: &octosense_app_hub_app::catalog::RevokedRelease) {
+        let launch_id = apps::installed_launch_id(&revoked.app_id);
+        let clients: Vec<_> = self.state.as_ref().into_iter()
+            .flat_map(|state| state.clients.iter())
+            .filter_map(|(&client, slot)| {
+                (slot.app == launch_id
+                    && self.module_host.get(client)
+                        .and_then(|instance| octosense_app_hub_app::running_release(&instance.root))
+                        .is_some_and(|running| revoked.matches(&running)))
+                    .then_some(client)
+            })
+            .collect();
+        for client in clients { self.request_close(cx, client); }
+    }
+
     fn request_close(&mut self, cx: &mut Cx, client: ClientId) {
         // A module instance has no process to ask politely and nothing to
         // reap later: it ends now, through the same removal as a death.
@@ -4666,6 +4682,10 @@ impl MatchEvent for App {
             #[cfg(any(feature = "app-hub", native_mobile))]
             for id in octosense_app_hub_app::take_completed_installs() {
                 self.installed_app_changed(cx, &id);
+            }
+            #[cfg(any(feature = "app-hub", native_mobile))]
+            for revoked in octosense_app_hub_app::take_revoked_releases() {
+                self.close_revoked_release(cx, &revoked);
             }
             self.drain_hub(cx);
             self.drain_client_lines(cx);

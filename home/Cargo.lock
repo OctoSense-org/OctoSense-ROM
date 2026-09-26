@@ -3491,6 +3491,7 @@ checksum = "85ab80394333c02fe689eaf900ab500fbd0c2213da414687ebf995a65d5a6104"
 dependencies = [
  "bytemuck 1.25.2",
  "byteorder-lite",
+ "image-webp",
  "moxcms",
  "num-traits 0.2.19 (registry+https://github.com/rust-lang/crates.io-index)",
  "png 0.18.1",
@@ -5650,14 +5651,18 @@ dependencies = [
 [[package]]
 name = "octosense-app-hub"
 version = "0.1.0"
-source = "git+https://github.com/OctoSense-org/OctoSense-App-Hub?rev=0d36f50b9f0fdfbd8247b5deb8da8baa53c83066#0d36f50b9f0fdfbd8247b5deb8da8baa53c83066"
+source = "git+https://github.com/OctoSense-org/OctoSense-App-Hub?rev=0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c#0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c"
 dependencies = [
  "base64 0.22.1",
  "blake3",
  "ed25519-dalek",
  "hex",
+ "image",
+ "libc",
+ "octoscript-ui-l0",
  "octosense-app-policy",
  "rand_core 0.9.5",
+ "roxmltree 0.21.1",
  "serde",
  "serde_json",
  "ureq",
@@ -5666,7 +5671,7 @@ dependencies = [
 [[package]]
 name = "octosense-app-hub-app"
 version = "0.1.0"
-source = "git+https://github.com/OctoSense-org/OctoSense-App-Hub?rev=0d36f50b9f0fdfbd8247b5deb8da8baa53c83066#0d36f50b9f0fdfbd8247b5deb8da8baa53c83066"
+source = "git+https://github.com/OctoSense-org/OctoSense-App-Hub?rev=0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c#0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c"
 dependencies = [
  "makepad-app-module",
  "makepad-widgets",
@@ -5680,11 +5685,26 @@ dependencies = [
 [[package]]
 name = "octosense-app-policy"
 version = "0.1.0"
-source = "git+https://github.com/OctoSense-org/OctoSense-App-Hub?rev=0d36f50b9f0fdfbd8247b5deb8da8baa53c83066#0d36f50b9f0fdfbd8247b5deb8da8baa53c83066"
+source = "git+https://github.com/OctoSense-org/OctoSense-App-Hub?rev=0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c#0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c"
 dependencies = [
  "blake3",
  "makepad-widgets",
+ "semver",
  "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "octosense-app-validator"
+version = "0.1.0"
+source = "git+https://github.com/OctoSense-org/OctoSense-App-Hub?rev=0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c#0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c"
+dependencies = [
+ "blake3",
+ "makepad-widgets",
+ "octoscript-makepad",
+ "octoscript-widgets",
+ "octosense-app-hub",
+ "octosense-app-policy",
  "serde_json",
 ]
 
@@ -5701,7 +5721,7 @@ dependencies = [
 [[package]]
 name = "octosense-appstore"
 version = "0.1.0"
-source = "git+https://github.com/OctoSense-org/OctoSense-App-Hub?rev=0d36f50b9f0fdfbd8247b5deb8da8baa53c83066#0d36f50b9f0fdfbd8247b5deb8da8baa53c83066"
+source = "git+https://github.com/OctoSense-org/OctoSense-App-Hub?rev=0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c#0b033c4f5cab7d4ab0d29afd7b8440bcde587e6c"
 dependencies = [
  "makepad-app-module",
  "makepad-widgets",
@@ -5709,6 +5729,7 @@ dependencies = [
  "octoscript-widgets",
  "octosense-app-hub",
  "octosense-app-policy",
+ "octosense-app-validator",
  "serde_json",
 ]
 

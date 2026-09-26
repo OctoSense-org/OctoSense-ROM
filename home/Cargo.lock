@@ -3278,7 +3278,7 @@ dependencies = [
  "tokio",
  "tokio-rustls",
  "tower-service",
- "webpki-roots",
+ "webpki-roots 1.0.9",
 ]
 
 [[package]]
@@ -3859,7 +3859,7 @@ dependencies = [
  "tokio",
  "tokio-rustls",
  "url",
- "webpki-roots",
+ "webpki-roots 1.0.9",
 ]
 
 [[package]]
@@ -5198,6 +5198,7 @@ dependencies = [
  "octos-core",
  "octoscript-node",
  "octoscript-ui-l0",
+ "octosense-llm-config",
  "reqwest 0.12.28",
  "robius-open",
  "serde",
@@ -5640,6 +5641,8 @@ dependencies = [
  "makepad-wm-theme",
  "octosense-app-hub-app",
  "octosense-appcard",
+ "octosense-llm-config",
+ "octosense-llm-service",
  "octosense-mail-service",
  "octosense-maps",
  "octosense-news",
@@ -5650,7 +5653,7 @@ dependencies = [
 [[package]]
 name = "octosense-app-hub"
 version = "0.1.0"
-source = "git+https://www.github.com/OctoSense-org/OctoSense-App-Hub?rev=4605128d46fb982828d8198e0d71d62a39c7d6d6#4605128d46fb982828d8198e0d71d62a39c7d6d6"
+source = "git+https://www.github.com/OctoSense-org/OctoSense-App-Hub?rev=f69aad56ebf91d365cf1967665268ec197a21066#f69aad56ebf91d365cf1967665268ec197a21066"
 dependencies = [
  "base64 0.22.1",
  "blake3",
@@ -5660,13 +5663,13 @@ dependencies = [
  "rand_core 0.9.5",
  "serde",
  "serde_json",
- "ureq",
+ "ureq 3.4.2",
 ]
 
 [[package]]
 name = "octosense-app-hub-app"
 version = "0.1.0"
-source = "git+https://www.github.com/OctoSense-org/OctoSense-App-Hub?rev=4605128d46fb982828d8198e0d71d62a39c7d6d6#4605128d46fb982828d8198e0d71d62a39c7d6d6"
+source = "git+https://www.github.com/OctoSense-org/OctoSense-App-Hub?rev=f69aad56ebf91d365cf1967665268ec197a21066#f69aad56ebf91d365cf1967665268ec197a21066"
 dependencies = [
  "makepad-app-module",
  "makepad-widgets",
@@ -5680,7 +5683,7 @@ dependencies = [
 [[package]]
 name = "octosense-app-policy"
 version = "0.1.0"
-source = "git+https://www.github.com/OctoSense-org/OctoSense-App-Hub?rev=4605128d46fb982828d8198e0d71d62a39c7d6d6#4605128d46fb982828d8198e0d71d62a39c7d6d6"
+source = "git+https://www.github.com/OctoSense-org/OctoSense-App-Hub?rev=f69aad56ebf91d365cf1967665268ec197a21066#f69aad56ebf91d365cf1967665268ec197a21066"
 dependencies = [
  "blake3",
  "makepad-widgets",
@@ -5701,7 +5704,7 @@ dependencies = [
 [[package]]
 name = "octosense-appstore"
 version = "0.1.0"
-source = "git+https://www.github.com/OctoSense-org/OctoSense-App-Hub?rev=4605128d46fb982828d8198e0d71d62a39c7d6d6#4605128d46fb982828d8198e0d71d62a39c7d6d6"
+source = "git+https://www.github.com/OctoSense-org/OctoSense-App-Hub?rev=f69aad56ebf91d365cf1967665268ec197a21066#f69aad56ebf91d365cf1967665268ec197a21066"
 dependencies = [
  "makepad-app-module",
  "makepad-widgets",
@@ -5710,6 +5713,33 @@ dependencies = [
  "octosense-app-hub",
  "octosense-app-policy",
  "serde_json",
+]
+
+[[package]]
+name = "octosense-llm-config"
+version = "0.1.0"
+dependencies = [
+ "argon2",
+ "chacha20poly1305",
+ "chrono",
+ "flate2",
+ "qrcode",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.20",
+ "url",
+]
+
+[[package]]
+name = "octosense-llm-service"
+version = "0.1.0"
+dependencies = [
+ "image",
+ "octosense-appstore",
+ "octosense-llm-config",
+ "rqrr",
+ "serde_json",
+ "ureq 2.12.1",
 ]
 
 [[package]]
@@ -5728,7 +5758,7 @@ dependencies = [
  "scraper",
  "serde_json",
  "sha2 0.10.9",
- "webpki-roots",
+ "webpki-roots 1.0.9",
 ]
 
 [[package]]
@@ -6663,7 +6693,7 @@ dependencies = [
  "wasm-bindgen-futures",
  "wasm-streams 0.4.2",
  "web-sys",
- "webpki-roots",
+ "webpki-roots 1.0.9",
 ]
 
 [[package]]
@@ -8727,6 +8757,21 @@ checksum = "8ecb6da28b8a351d773b68d5825ac39017e680750f980f3a1a85cd8dd28a47c1"
 
 [[package]]
 name = "ureq"
+version = "2.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "02d1a66277ed75f640d608235660df48c8e3c19f3b4edb6a263315626cc3c01d"
+dependencies = [
+ "base64 0.22.1",
+ "log",
+ "once_cell 1.21.4",
+ "rustls",
+ "rustls-pki-types",
+ "url",
+ "webpki-roots 0.26.11",
+]
+
+[[package]]
+name = "ureq"
 version = "3.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9a7ac20be9b7726e0bbdbf974c059676d9acb1cd414961f570a4e8231cacd7fc"
@@ -8739,7 +8784,7 @@ dependencies = [
  "rustls-pki-types",
  "ureq-proto",
  "utf8-zero",
- "webpki-roots",
+ "webpki-roots 1.0.9",
 ]
 
 [[package]]
@@ -9074,6 +9119,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b96554aa2acc8ccdb7e1c9a58a7a68dd5d13bccc69cd124cb09406db612a1c9b"
 dependencies = [
  "rustls-pki-types",
+]
+
+[[package]]
+name = "webpki-roots"
+version = "0.26.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "521bc38abb08001b01866da9f51eb7c5d647a19260e00054a8c7fd5f9e57f7a9"
+dependencies = [
+ "webpki-roots 1.0.9",
 ]
 
 [[package]]

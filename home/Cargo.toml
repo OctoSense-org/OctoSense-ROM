@@ -62,6 +62,10 @@ makepad-sheets = { git = "https://github.com/OctoSense-org/makepad.git", rev = "
 octosense-photos = { path = "apps/photos", optional = true }
 octosense-reference = { path = "apps/reference", optional = true }
 octosense-mail-service = { path = "../.sources/system-apps/apps/mail/host-service", optional = true }
+# `llm` keeps the assistant's LLM providers for the AI providers app
+# (`os.ai-providers`); the config crate names the AppCard kernel's octos home.
+octosense-llm-service = { path = "../.sources/system-apps/apps/ai-providers/host-service", optional = true }
+octosense-llm-config = { path = "../.sources/system-apps/apps/ai-providers/config", optional = true }
 # The whole AppCard assistant (OctoSense-System-Apps apps/appcard) hosted in
 # a tile, in-process (Phase B of the AppCard port): octos-app's AppShell — routing brain, cards, kernel agent.
 octosense-appcard = { path = "apps/appcard", optional = true }
@@ -71,7 +75,7 @@ octosense-news = { path = "apps/news", optional = true }
 # App Hub's shell integration (store, Card runner, system apps, icons),
 # shared with every OctoSense shell; its build packs the system apps named by
 # OCTOSENSE_SYSTEM_APPS (.cargo/config.toml -> system-apps.json).
-octosense-app-hub-app = { git = "https://github.com/OctoSense-org/OctoSense-App-Hub", rev = "4605128d46fb982828d8198e0d71d62a39c7d6d6", optional = true }
+octosense-app-hub-app = { git = "https://github.com/OctoSense-org/OctoSense-App-Hub", rev = "f69aad56ebf91d365cf1967665268ec197a21066", optional = true }
 # OctosMap: a map under a search bar, places, directions by car, on foot and
 # by bike, and turn-by-turn navigation.
 octosense-maps = { path = "apps/maps", optional = true }
@@ -85,13 +89,16 @@ makepad-aichat = { git = "https://github.com/OctoSense-org/makepad.git", rev = "
 [target.'cfg(any(target_os = "android", target_os = "ios", target_env = "ohos"))'.dependencies]
 octosense-reference = { path = "apps/reference" }
 octosense-appcard = { path = "apps/appcard" }
-octosense-app-hub-app = { git = "https://github.com/OctoSense-org/OctoSense-App-Hub", rev = "4605128d46fb982828d8198e0d71d62a39c7d6d6" }
+octosense-app-hub-app = { git = "https://github.com/OctoSense-org/OctoSense-App-Hub", rev = "f69aad56ebf91d365cf1967665268ec197a21066" }
 # Mail, News, Photos, Maps and Camera ship as contained script apps
 # (OctoSense-System-Apps apps/<name>/bundle/, chosen by system-apps.json,
 # ADR 0004); the `mail` host service keeps Mail's accounts and passwords.
 # `app-news`, `app-photos` and `app-maps` link the native modules instead,
 # for comparison; Mail and Camera have no native module any more.
 octosense-mail-service = { path = "../.sources/system-apps/apps/mail/host-service" }
+# `llm`: the AI providers app's providers, camera QR and image import.
+octosense-llm-service = { path = "../.sources/system-apps/apps/ai-providers/host-service" }
+octosense-llm-config = { path = "../.sources/system-apps/apps/ai-providers/config" }
 makepad-sheets = { git = "https://github.com/OctoSense-org/makepad.git", rev = "1d3d383e84a66dbb18a4a860f505430c9d5b20f4", default-features = false }
 
 [features]
@@ -104,7 +111,7 @@ default = ["app-hub"]
 mobile-only = []
 # Also usable on desktop for testing the same embedded apps with --module.
 mobile-apps = ["app-reference", "app-sheets", "app-photos", "app-appcard", "app-news", "app-maps", "app-hub"]
-app-hub = ["dep:octosense-app-hub-app", "dep:octosense-mail-service"]
+app-hub = ["dep:octosense-app-hub-app", "dep:octosense-mail-service", "dep:octosense-llm-service", "dep:octosense-llm-config"]
 app-reference = ["dep:octosense-reference"]
 # Sheets linked in as a module (hosting is still Process unless switched).
 app-sheets = ["dep:makepad-sheets"]
@@ -186,14 +193,15 @@ makepad-widgets = { path = "../.sources/makepad/widgets" }
 nix = { git = "https://github.com/octos-org/octos.git", rev = "18fcd3f16e527d2b601d7ae244f056fb711bb6b8" }
 
 # One App Hub source. Home links App Hub's shell crate at the pin above, but
-# the Mail host service (OctoSense-System-Apps) names octosense-appstore at an
-# older App Hub rev; two appstore copies would keep two host-service registries,
-# and the Card runner would never see Mail's service. A patch cannot point a
-# source at another rev of itself, so every App Hub crate — Home's and the Mail
-# service's — resolves through the www host alias of the same repository, at
-# Home's pin. Drop this once OctoSense-System-Apps pins the same App Hub rev.
+# the Mail and llm host services (OctoSense-System-Apps) name octosense-appstore
+# at an older App Hub rev; two appstore copies would keep two host-service
+# registries, and the Card runner would never see their services. A patch
+# cannot point a source at another rev of itself, so every App Hub crate —
+# Home's and the services' — resolves through the www host alias of the same
+# repository, at Home's pin. Drop this once OctoSense-System-Apps pins the same
+# App Hub rev.
 [patch."https://github.com/OctoSense-org/OctoSense-App-Hub"]
-octosense-app-hub-app = { git = "https://www.github.com/OctoSense-org/OctoSense-App-Hub", rev = "4605128d46fb982828d8198e0d71d62a39c7d6d6" }
-octosense-app-hub = { git = "https://www.github.com/OctoSense-org/OctoSense-App-Hub", rev = "4605128d46fb982828d8198e0d71d62a39c7d6d6" }
-octosense-app-policy = { git = "https://www.github.com/OctoSense-org/OctoSense-App-Hub", rev = "4605128d46fb982828d8198e0d71d62a39c7d6d6" }
-octosense-appstore = { git = "https://www.github.com/OctoSense-org/OctoSense-App-Hub", rev = "4605128d46fb982828d8198e0d71d62a39c7d6d6" }
+octosense-app-hub-app = { git = "https://www.github.com/OctoSense-org/OctoSense-App-Hub", rev = "f69aad56ebf91d365cf1967665268ec197a21066" }
+octosense-app-hub = { git = "https://www.github.com/OctoSense-org/OctoSense-App-Hub", rev = "f69aad56ebf91d365cf1967665268ec197a21066" }
+octosense-app-policy = { git = "https://www.github.com/OctoSense-org/OctoSense-App-Hub", rev = "f69aad56ebf91d365cf1967665268ec197a21066" }
+octosense-appstore = { git = "https://www.github.com/OctoSense-org/OctoSense-App-Hub", rev = "f69aad56ebf91d365cf1967665268ec197a21066" }

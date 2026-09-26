@@ -42,6 +42,8 @@ mod hub;
 mod layout;
 mod octosense;
 mod module_host;
+#[cfg(any(feature = "app-hub", native_mobile))]
+mod llm_host;
 mod module_view;
 mod pane_links;
 mod preview;
@@ -4306,6 +4308,9 @@ impl MatchEvent for App {
         #[cfg(any(feature = "app-hub", native_mobile))]
         octosense_app_hub_app::set_data_root(cx.get_data_dir().map(std::path::PathBuf::from)
             .unwrap_or_else(octosense::paths::home).join("apps"));
+        // AI providers' `llm` service writes the AppCard kernel's profile.
+        #[cfg(any(feature = "app-hub", native_mobile))]
+        llm_host::register(llm_host::core_dir(cx.get_data_dir()));
         // CLI: --import-theme <name> pulls an omarchy theme and converts
         // it to splash before the desktop appears.
         let mut args = std::env::args();
@@ -4797,6 +4802,8 @@ impl AppMain for App {
             }
         }
         mobile_perf::saw_event(event);
+        #[cfg(any(feature = "app-hub", native_mobile))]
+        self.llm_host_event(cx, event);
         if self.android_event(cx, event) { return; }
         // Android's Home button or gesture, with OctoSense as the Home app.
         if matches!(event, Event::HomeIntent) { self.phone_home_intent(cx); return; }

@@ -5,13 +5,23 @@
     "source_commit": "d7a834c74783e2032bc9e2cb9e693eaa2927b1d9",
     "patch": "patches/runtime/makepad-contained-apps.patch",
     "sha256": "70419d98644af0820816f8bbc480365fa214c71f96eea0dba4b541c7ec9d59a2",
-    "tree": "3889a3496226def432ecdf8131a9d12eb822e59b",
+    "tree": "f8eee5cf4ced8e3d5215485d98d2071bf86e8527",
     "product_fixes": [
       "Contained script apps (OctoSense-org/makepad#30): every path out of an isolate answers to its policy; images/web grants; WebReader, GestureView, SheetView, CameraPreview; parse_feed and fs.read_bytes.",
       "Host services: a host takes only its own isolates' requests, and an asynchronous answer wakes the UI.",
       "A contained app cannot collect a secret: password and one-time-code fields are inert in a policed isolate.",
       "Text: a run's trailing space keeps its width unless the row wraps there; every widget takes text/set_text from script.",
       "Sockets and servers: net.web_socket answers to the app's host list like net.http_request; net.socket_stream and net.http_server are refused in a policed isolate; a Video's network and file sources answer to the host list and the storage jail."
+    ],
+    "stacked": [
+      {
+        "patch": "patches/runtime/makepad-qr-scanner.patch",
+        "source_commit": "3735a8e9145dfb14bce1678c1150addd9a09c22c",
+        "sha256": "64b7b6c412630a9ef583778624b98b160a07cb92e922fdf2a8bf1405179d26b3",
+        "product_fixes": [
+          "QR scanner API (OctoSense-org/makepad#31, platform/ and tools/ only; its qr_scan example is left out): Cx::show_qr_scanner opens the Android Camera2 scanner and answers exactly once with NativeQrScanned { json } or NativeQrCancelled { reason }; back, pause and a refused CAMERA permission cancel it."
+        ]
+      }
     ]
   }
 }
